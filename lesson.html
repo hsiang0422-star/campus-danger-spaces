@@ -1,35 +1,86 @@
-<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>校園安全互動地圖｜臺南特教</title>
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173f43">
+<title>校園危險空間 3D 互動地圖｜臺南特教</title>
 <style>
-:root{--ink:#173f43;--deep:#102f33;--paper:#f6f8f2;--coral:#d95746;--line:#dce5dd;--muted:#596d6d}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 "Microsoft JhengHei","Noto Sans TC",sans-serif}header{background:var(--deep);color:white;padding:14px max(18px,calc((100% - 1160px)/2));display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}a{color:inherit}.hero{padding:36px max(18px,calc((100% - 1160px)/2));background:linear-gradient(120deg,#fff0cf,#e5f2df,#e2f4f5)}h1{font-size:clamp(2rem,5vw,3.2rem);margin:0}.hero p{max-width:780px;margin:8px 0}.wrap{max-width:1160px;margin:20px auto;padding:0 16px}.tools{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}.tools input{flex:1;min-width:220px;padding:10px;border:1px solid #b9c9bf;border-radius:10px;font:inherit}.tools button,.places button{padding:9px 13px;border:1px solid #c4d2c7;border-radius:10px;background:white;color:var(--ink);font:inherit;cursor:pointer}.tools button[aria-pressed=true]{background:var(--ink);color:white}.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px}.mapbox,.detail{background:white;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 12px 30px #173f4314}.mapbox h2{margin:0 0 8px}.map{height:570px;position:relative;overflow:hidden;border-radius:14px;background-color:#eaf2df;background-image:linear-gradient(#ffffff55 1px,transparent 1px),linear-gradient(90deg,#ffffff55 1px,transparent 1px);background-size:32px 32px}.path{position:absolute;left:-5%;top:52%;width:110%;height:38px;background:#faf4dc;border-block:2px solid #e2d9bd;transform:rotate(-8deg)}.bld{position:absolute;background:#f8fbf3;border:2px solid #9db4a0;border-radius:12px;text-align:center;padding:10px 3px;font-size:.82rem;font-weight:bold}.admin{left:35%;top:12%;width:27%;height:15%}.teach{left:38%;top:39%;width:32%;height:17%}.dining{left:70%;top:59%;width:21%;height:13%}.dorm{left:7%;top:54%;width:23%;height:15%}.hall{left:68%;top:17%;width:22%;height:15%}.green{position:absolute;background:#c9dfa9;border:2px dashed #9fbe78;border-radius:50%}.g1{left:4%;top:10%;width:22%;height:27%}.g2{left:7%;bottom:7%;width:25%;height:25%}.g3{right:4%;bottom:7%;width:24%;height:25%}.pin{position:absolute;z-index:2;transform:translate(-50%,-50%);width:38px;height:38px;border:3px solid white;border-radius:50% 50% 50% 5px;rotate:-45deg;background:var(--coral);color:white;font-weight:900;cursor:pointer;box-shadow:0 3px 10px #173f4355}.pin span{display:block;rotate:45deg}.pin:hover,.pin:focus,.pin.sel{scale:1.2;outline:3px solid #ffd56a}.pin.patrol{background:#57989b}.small{color:var(--muted);font-size:.86rem}.detail{position:sticky;top:12px;min-height:280px}.badge{display:inline-block;padding:3px 10px;background:#fde5df;color:#85332a;border-radius:99px;font-size:.8rem;font-weight:bold}.detail h2{margin:10px 0 2px}.tip{background:#eef4df;border-radius:12px;padding:12px;margin:12px 0}.detail img{width:100%;max-height:210px;object-fit:contain;background:#f2f4ef;border-radius:10px}.places{margin:28px 0}.places div{display:flex;gap:7px;flex-wrap:wrap}.places button:hover{background:#fce5df}.note{background:#fff3d5;border-left:5px solid #e2b545;padding:13px;border-radius:10px;margin:24px 0}footer{background:var(--deep);color:white;padding:18px;text-align:center;margin-top:30px}@media(max-width:850px){.layout{grid-template-columns:1fr}.detail{position:static}.map{height:500px}}@media(max-width:520px){.map{height:440px}.bld{font-size:.68rem;padding:3px}.pin{width:32px;height:32px}}
-</style>
-<header><b>臺南特教｜校園安全</b><nav><a href="#map">互動地圖</a>　<a href="index.html">照片與巡查原始資料</a></nav></header>
-<section class="hero"><h1>校園安全互動地圖</h1><p>點地圖上的紅色驚嘆號，或把滑鼠移到標記上，查看報告列出的留意地點、照片和建議行動。手機可直接點選。</p></section>
-<main class="wrap"><div class="tools"><label for="search">找地點</label><input id="search" placeholder="例如：宿舍、餐廳、樓梯間"><button id="danger" aria-pressed="true">留意地點</button><button id="patrol" aria-pressed="false">巡查點</button></div>
-<div class="layout" id="map"><section class="mapbox"><h2>校園地圖</h2><div class="map" id="canvas"><i class="green g1"></i><i class="green g2"></i><i class="green g3"></i><i class="path"></i><div class="bld admin">行政大樓</div><div class="bld teach">教學大樓</div><div class="bld dining">餐廳</div><div class="bld dorm">宿舍</div><div class="bld hall">禮堂</div></div><p class="small">示意配置，非測量比例圖。標記按報告中的地名歸區呈現，正式使用前請依學校核定地圖校正位置。</p></section>
-<aside class="detail" id="detail" aria-live="polite"><span class="badge">選擇一個標記</span><h2>地點資訊會顯示在這裡</h2><p>滑鼠移過或點選紅色標記，可看地點照片和建議行動。</p><div class="tip">感到不安時，先前往明亮、人多的地方，再向老師或校內人員求助。</div></aside></div>
-<section class="places"><h2>地點清單</h2><div id="list"></div></section>
-<div class="note"><b>資料說明：</b>地點依 112 學年校園危險空間改善報告整理（資料基準 113.4.8）。示意標記不代表即時安全狀況；現況請依校內公告及人員指引。</div></main><footer>國立臺南特殊教育學校｜校園安全地圖</footer>
+:root{--ink:#173f43;--deep:#102f33;--paper:#f3f7f3;--line:#dce5dd;--muted:#5b6d6d;--orange:#f37a32;--rose:#e6a0a5;--green:#93c875;--shadow:0 16px 40px #16383b18}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Microsoft JhengHei","Noto Sans TC",sans-serif;line-height:1.55}a{color:inherit}
+header{background:var(--deep);color:white;padding:14px max(16px,calc((100% - 1450px)/2));display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}header strong{font-size:1.08rem}nav{display:flex;gap:8px;flex-wrap:wrap}nav a{color:white;text-decoration:none;border:1px solid #ffffff55;border-radius:99px;padding:6px 12px}
+.hero{background:linear-gradient(120deg,#fff1d7,#e6f2e1 58%,#e0f1f3);padding:24px max(16px,calc((100% - 1450px)/2))}.eyebrow{color:#607820;font-weight:800;letter-spacing:.08em;font-size:.8rem}.hero h1{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.14;margin:7px 0}.hero p{margin:0;max-width:900px;color:#425b59}
+.wrap{max-width:1450px;margin:auto;padding:18px 16px 38px}.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.controls input{flex:1;min-width:210px;padding:9px 12px;border:1px solid #bdcec4;border-radius:10px;font:inherit}.controls button{border:1px solid #c6d5ca;background:white;color:var(--ink);padding:8px 12px;border-radius:10px;font:inherit;cursor:pointer}.controls button:hover{background:#eaf1dd}.hint{font-size:.86rem;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}.stage{overflow:hidden;min-height:590px;border:1px solid var(--line);border-radius:22px;background:radial-gradient(ellipse at center,#eaf3e8,#dfeae3);box-shadow:var(--shadow);display:grid;place-items:center;padding:10px;perspective:1500px}
+.board{width:min(100%,1180px);aspect-ratio:1794/1084;position:relative;transform-style:preserve-3d;transform:rotateX(24deg) rotateZ(-1deg) scale(.94);transition:transform .18s ease-out;filter:drop-shadow(0 26px 18px #193d3940);touch-action:none;user-select:none}
+.board svg{display:block;width:100%;height:100%;border:10px solid #fff;border-radius:12px;background:#fbfaf0;box-shadow:0 16px 0 #91a99b,0 22px 0 #748e7f}
+.zone{position:absolute;z-index:3;transform:translate(-50%,-50%);width:clamp(25px,3vw,42px);height:clamp(25px,3vw,42px);border:2px solid white;border-radius:50%;background:var(--orange);color:white;font-size:clamp(.8rem,1.4vw,1.15rem);font-weight:900;box-shadow:0 4px 0 #bd5121,0 5px 12px #253d3660;cursor:pointer;transition:transform .15s,box-shadow .15s;touch-action:manipulation}
+.zone:hover,.zone:focus-visible,.zone.active{transform:translate(-50%,-50%) scale(1.22) translateZ(24px);box-shadow:0 0 0 5px #ffd66d88,0 5px 0 #bd5121;outline:none}
+.detail{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);position:sticky;top:12px;min-height:350px}
+.detail .badge{display:inline-block;background:#fde5df;color:#93382b;border-radius:99px;padding:4px 10px;font-size:.8rem;font-weight:800}.detail h2{font-size:1.35rem;margin:10px 0 4px}.detail p{color:var(--muted);margin:7px 0}.detail .advice{background:#eff5e6;border-left:4px solid #83a644;padding:11px 12px;border-radius:8px;margin:13px 0}.detail img{display:block;width:100%;max-height:190px;object-fit:contain;background:#f3f4ef;border-radius:10px;margin-top:10px}.detail a.photo{display:inline-block;margin-top:9px;background:var(--ink);color:white;text-decoration:none;padding:8px 11px;border-radius:9px;font-weight:700}
+.list-wrap{margin-top:20px}.list-wrap h2{font-size:1.1rem}.spot-list{display:flex;flex-wrap:wrap;gap:7px}.spot-list button{border:1px solid #d7ded8;background:white;border-radius:99px;padding:7px 10px;color:var(--ink);cursor:pointer;font:inherit}.spot-list button:hover,.spot-list button.active{background:#fde5df;border-color:#e89b7a}
+.note{margin-top:18px;padding:12px 14px;background:#fff3d5;border-left:4px solid #dfb344;border-radius:9px;color:#5c512c;font-size:.9rem}
+footer{background:var(--deep);color:#e8f0e0;padding:16px;text-align:center;font-size:.88rem}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.detail{position:static;min-height:0}.stage{min-height:48vw}.board{width:100%;transform:rotateX(15deg) rotateZ(0deg) scale(.97)}.detail img{max-height:150px}}
+@media(max-width:560px){.wrap{padding:12px}.stage{min-height:310px;padding:4px}.board{width:148%;max-width:none;transform:rotateX(12deg) rotateZ(0deg) scale(.94)}.zone{width:26px;height:26px;font-size:.8rem}.hero{padding-top:19px;padding-bottom:19px}}
+@media(prefers-reduced-motion:reduce){.board,.zone{transition:none}}
+</style></head><body>
+<header><strong>國立臺南特殊教育學校｜危險空間 3D 互動地圖</strong><nav><a href="#map">互動地圖</a><a href="index.html">照片與巡查原始資料</a></nav></header>
+<section class="hero"><div class="eyebrow">CAMPUS SAFETY · 15 個圖示地點</div><h1>點選地圖，認識需要多留意的空間</h1><p>依你提供的校園危險空間圖整理。滑鼠移到橘色編號可查看地點與建議；點選可固定資訊。拖曳地圖可改變 3D 視角，滾輪可縮放。</p></section>
+<main class="wrap" id="map"><div class="controls"><label for="search">找地點</label><input id="search" type="search" placeholder="輸入地點或編號，例如：洗衣場、操場、12"><button id="resetView">重設 3D 視角</button><span class="hint">桌機：拖曳旋轉・滾輪縮放　手機：拖曳旋轉・雙指縮放</span></div>
+<div class="grid"><section class="stage" id="stage" aria-label="可旋轉的 3D 校園危險空間地圖"><div class="board" id="board">
+<svg viewBox="0 0 1794 1084" role="img" aria-label="臺南特教校園配置示意圖">
+<defs><filter id="shadow" x="-30%" y="-30%" width="170%" height="180%"><feDropShadow dx="0" dy="13" stdDeviation="7" flood-color="#29453b" flood-opacity=".35"/></filter><pattern id="grass" width="28" height="28" patternUnits="userSpaceOnUse"><rect width="28" height="28" fill="#9bce78"/><circle cx="5" cy="7" r="1.3" fill="#80b568"/><circle cx="20" cy="22" r="1.4" fill="#b2d88c"/></pattern></defs>
+<rect width="1794" height="1084" fill="#fbfaf0"/>
+<path d="M75 260L190 205 1558 176 1612 526 1708 792 1140 1010 191 492Z" fill="#f0b294" stroke="#d84c3f" stroke-width="13"/>
+<path d="M89 277L193 221 1547 193 1595 529 1682 777 1148 987 208 478Z" fill="#fffdf7"/>
+<!-- green grounds -->
+<path d="M86 315L191 250 405 250 405 448 478 485 400 594 184 485 104 369Z" fill="url(#grass)"/>
+<path d="M402 348L833 349 834 441 477 441 415 526 355 477Z" fill="url(#grass)"/>
+<path d="M833 225L1172 221 1172 267 833 291Z" fill="#9bc976"/>
+<path d="M1179 286L1300 280 1300 524 1246 519 1246 450 1178 450Z" fill="#9fcf7e"/>
+<path d="M1190 894L1290 891 1280 984 1168 986Z" fill="url(#grass)"/>
+<!-- buildings with visible 3D extrusion -->
+<g filter="url(#shadow)">
+<path d="M205 252L405 252 405 441 205 441Z" fill="#5d9fba" stroke="#fff" stroke-width="5"/><path d="M405 252L430 238 430 427 405 441Z" fill="#39758f"/><path d="M205 252L230 238 430 238 405 252Z" fill="#81bad0"/>
+<path d="M430 240L645 240 645 350 430 350Z" fill="#ed996f" stroke="#fff" stroke-width="5"/><path d="M645 240L670 226 670 336 645 350Z" fill="#c87859"/>
+<path d="M650 251L780 251 780 356 650 356Z" fill="#e9a27a" stroke="#fff" stroke-width="5"/><path d="M780 251L805 237 805 342 780 356Z" fill="#bf7457"/>
+<path d="M833 232L1244 232 1244 414 833 414Z" fill="#e4a0a5" stroke="#fff" stroke-width="5"/><path d="M1244 232L1270 218 1270 400 1244 414Z" fill="#b9787d"/>
+<path d="M1085 468L1270 468 1270 884 1085 884Z" fill="#e4a0a5" stroke="#fff" stroke-width="5"/><path d="M1270 468L1297 454 1297 870 1270 884Z" fill="#b9787d"/>
+<path d="M1306 216L1518 216 1518 532 1306 532Z" fill="#c9ccce" stroke="#fff" stroke-width="5"/><path d="M1518 216L1544 202 1544 518 1518 532Z" fill="#999fa3"/>
+<path d="M1336 294L1487 294 1487 493 1336 493Z" fill="#c89ac0" stroke="#fff" stroke-width="3"/>
+</g>
+<!-- track and field -->
+<g transform="rotate(29 745 703)"><rect x="462" y="550" width="566" height="267" rx="132" fill="#cc453e"/><rect x="487" y="574" width="516" height="218" rx="109" fill="#37894e" stroke="#fff" stroke-width="3"/><rect x="543" y="622" width="402" height="122" rx="15" fill="#4d9e5e" stroke="#a8d8a8" stroke-width="3"/><line x1="744" y1="622" x2="744" y2="744" stroke="#c7e5bc" stroke-width="3"/><circle cx="744" cy="683" r="22" fill="none" stroke="#c7e5bc" stroke-width="3"/><path d="M462 610H1028M462 638H1028M462 666H1028M462 694H1028M462 722H1028M462 750H1028" stroke="#f7d2bb" stroke-width="3" fill="none"/></g>
+<!-- paths, court, trees -->
+<path d="M1275 576L1516 576 1516 735 1275 735Z" fill="#d5eff0"/><path d="M1353 889L1715 889 1715 1020 1353 1020Z" fill="#e6f0dd" stroke="#9bb89b" stroke-width="3"/><path d="M1545 895V1017M1627 895V1017" stroke="#8eb2c6" stroke-width="4"/>
+<g fill="#368d47" stroke="#246b38" stroke-width="3"><circle cx="128" cy="290" r="26"/><circle cx="454" cy="425" r="25"/><circle cx="878" cy="439" r="25"/><circle cx="1558" cy="223" r="22"/><circle cx="1662" cy="700" r="24"/><circle cx="1382" cy="841" r="26"/><circle cx="771" cy="705" r="20"/></g>
+<g font-family="sans-serif" fill="#17649a" font-weight="700" text-anchor="middle"><text x="305" y="340" font-size="34" transform="rotate(90 305 340)">學生宿舍</text><text x="535" y="299" font-size="25">學生餐廳</text><text x="715" y="304" font-size="24">蕙質樓</text><text x="1038" y="326" font-size="34">教學大樓</text><text x="1410" y="413" font-size="30" transform="rotate(90 1410 413)">行政大樓</text><text x="1180" y="670" font-size="34" transform="rotate(90 1180 670)">教學大樓</text></g>
+<g font-family="sans-serif" fill="#4e5a56" font-size="24" font-weight="700"><text x="205" y="238">洗衣場</text><text x="1325" y="245">南智洗車場</text><text x="1360" y="917">國藝場</text><text x="1092" y="920">垃圾場</text><text x="1310" y="567">風雨廊道</text><text x="1570" y="625" transform="rotate(78 1570 625)">長和路二段</text><text x="95" y="538">和順國中</text><text x="1380" y="1070">依學校危險空間圖重繪的互動示意圖</text></g>
+<g fill="#697770" font-family="sans-serif" font-size="16"><text x="35" y="70">N ↑</text><text x="1410" y="1040">1–11：校園空間　｜　12–15：樓層空間</text></g>
+</svg>
+</div></section>
+<aside class="detail" id="detail" aria-live="polite"><span class="badge">選擇一個編號</span><h2>危險空間資訊</h2><p>移到橘色編號查看說明，點選後可在這裡閱讀完整建議。</p><div class="advice">經過不熟悉或視線較差的區域時，走主要通道；感到不安或發現設備問題，先離開並找老師或校內人員協助。</div></aside></div>
+<section class="list-wrap"><h2>地點快速選擇</h2><div class="spot-list" id="spotList"></div></section>
+<div class="note"><b>圖面依據：</b>依使用者提供的危險空間校園圖重繪，編號 1–11 參照校園區域、12–15 參照圖面標示樓層。這是互動導覽圖，非測量比例圖；實際位置請依校方核定圖面及現況確認。</div>
+</main><footer>國立臺南特殊教育學校｜危險空間互動地圖　・　原始照片與巡查資料請由上方連結查看</footer>
 <script>
-const data=[
-["宿舍後方",11,17,59,"經過宿舍後方時，優先走明亮、有人往來的路線；若感到不安，找同學同行並告知老師。"],
-["宿舍洗衣場",11,25,70,"留意洗衣場周邊地面和設備；如發現損壞或感到不安，先離開並通知校內人員。"],
-["餐廳後面",12,79,66,"經過餐廳後方時避免在視線不易到達處逗留，可走主要通道並結伴同行。"],
-["餐廳旁空地",12,70,75,"留意照明和地面狀況；發現危險物或障礙，保持距離並告訴老師。"],
-["東側空地",13,17,32,"盡量選擇有人往來的路線，不單獨進入視線遮蔽處；需要協助時找校內人員。"],
-["儀安洗車場後面",13,25,22,"此處較偏，建議走主要通道並避免獨自逗留；發現異常請告知老師或值勤人員。"],
-["校門口停車場",14,51,34,"留意車輛動線，走行人通道；避免在車輛進出處停留，聽從校內人員引導。"],
-["停車場樹叢內",14,40,31,"不要進入視線被遮擋處。若物品掉入或發現異常，找大人協助，不自行深入。"],
-["園藝區",15,18,15,"留意工具與地面高低差，按指定路線行走；看到工具未收妥，告知老師。"],
-["垃圾場",15,81,84,"留意濕滑地面或搬運作業，未經允許不要進入；有狀況請通知校內人員。"],
-["國小部教室後面",16,45,49,"保持在通行動線上，避免進入堆物或視線遮蔽處；看到阻塞請告知老師。"],
-["桌球教室區域",16,57,49,"留意器材與活動中的球具，依老師指示進出；發現器材不穩或損壞不要自行搬動。"],
-["體育器材室",17,67,45,"器材可能較重或堆疊，請由老師或負責人陪同使用；不攀爬、不拉扯不穩物品。"],
-["禮堂周圍",18,78,23,"留意樓梯、轉角與人流；活動期間依指示通行，遇到擁擠先停下並找工作人員。"],
-["樓梯間",19,63,39,"上下樓梯握扶手、不奔跑，轉角放慢；若照明故障、地面濕滑或通道阻塞，告訴老師。"]
-],patrol=[["總務處前樓梯口",35,17],["職評室前消防栓",41,22],["蕙質樓電梯",49,26],["餐廳南側機車棚",74,62],["餐廳電梯",83,59],["洗衣場外樓梯",29,62],["宿舍電梯外",20,55],["垃圾場內側",87,84],["攀岩場外樓梯",31,84],["性別友善廁所外牆",59,61],["模擬工廠 1F 東南側",44,23],["實輔處 2F 東南側",51,22],["禮堂 3F 東南側",72,25],["禮堂 3F 東北側",85,27],["禮堂 4F 西南側",70,14],["禮堂 4F 西北側",85,15],["門市教室 2F 外露台",57,44],["丁梯 3F 頂樓梯",61,51],["乙梯 4F 頂樓梯間",68,51],["丙梯 4F 頂樓梯間",71,43],["餐廳 1F 南側",72,68],["餐廳 1F 北側",85,68],["餐廳 2F 南側",71,58],["餐廳 2F 北側",85,58]];
-let mode="danger";const canvas=document.getElementById("canvas"),detail=document.getElementById("detail");
-function selectPlace(p,el){document.querySelectorAll(".pin").forEach(x=>x.classList.toggle("sel",x===el));detail.innerHTML='<span class="badge">⚠ 報告列出的留意地點</span><h2>'+p[0]+'</h2><p>改善報告第 '+p[1]+' 頁</p><div class="tip"><b>可以怎麼做</b><br>'+p[4]+'</div><img src="photos/page-'+p[1]+'.png" alt="'+p[0]+'報告照片"><p><a target="_blank" href="photos/page-'+p[1]+'.png">另開照片 ↗</a></p>'}
-function draw(){canvas.querySelectorAll(".pin").forEach(x=>x.remove());const q=document.getElementById("search").value.trim().toLowerCase();if(mode==="danger"){data.filter(p=>p[0].toLowerCase().includes(q)).forEach(p=>{const b=document.createElement("button");b.className="pin";b.style.left=p[2]+"%";b.style.top=p[3]+"%";b.innerHTML="<span>!</span>";b.title=p[0]+"｜移過查看說明";b.setAttribute("aria-label",p[0]+"，留意地點");b.onmouseenter=()=>selectPlace(p,b);b.onfocus=()=>selectPlace(p,b);b.onclick=()=>selectPlace(p,b);canvas.appendChild(b)})}else patrol.filter(p=>p[0].toLowerCase().includes(q)).forEach(p=>{const b=document.createElement("button");b.className="pin patrol";b.style.left=p[1]+"%";b.style.top=p[2]+"%";b.innerHTML="<span>✓</span>";b.title="巡查點："+p[0];b.setAttribute("aria-label",b.title);b.onmouseenter=()=>detail.innerHTML='<span class="badge">巡查位置</span><h2>'+p[0]+'</h2><p>列在報告的校園巡查點清單中。</p><div class="tip">巡查資料依報告記載，實際執行情形請以校內最新紀錄為準。</div>';b.onfocus=b.onmouseenter;b.onclick=b.onmouseenter;canvas.appendChild(b)})}
-function listPlaces(){const l=document.getElementById("list");l.innerHTML="";data.forEach(p=>{const b=document.createElement("button");b.textContent=p[0];b.onclick=()=>{mode="danger";document.getElementById("danger").setAttribute("aria-pressed","true");document.getElementById("patrol").setAttribute("aria-pressed","false");draw();selectPlace(p,null);document.getElementById("map").scrollIntoView({behavior:"smooth"})};l.appendChild(b)})}
-document.getElementById("search").addEventListener("input",draw);document.getElementById("danger").onclick=e=>{mode="danger";e.currentTarget.setAttribute("aria-pressed","true");document.getElementById("patrol").setAttribute("aria-pressed","false");draw()};document.getElementById("patrol").onclick=e=>{mode="patrol";e.currentTarget.setAttribute("aria-pressed","true");document.getElementById("danger").setAttribute("aria-pressed","false");draw()};listPlaces();draw();
-</script></html>
+const spots=[
+[1,"宿舍旁樹叢空地",11,"此處位在宿舍旁的樹木與空地附近。經過時走開闊、有照明的動線，不要獨自進入視線遮蔽處；感到不安請找老師或校內人員。",12,35],
+[2,"學生宿舍／洗衣場周邊",11,"宿舍與洗衣場通道請留意照明、地面與周遭視線。發現設備損壞或地面濕滑，先避開並通知校內人員。",22,24.5],
+[3,"宿舍與餐廳間通道",11,"通過建物間通道時留意視線死角，盡量走主要通路並結伴同行；不要進入未開放或堆物區域。",32,21.5],
+[4,"學生餐廳側通道",11,"此處鄰近餐廳及騎樓空間。人車混行時放慢腳步，保持通道暢通，遇到不安全狀況告知老師。",36.7,24.6],
+[5,"教學大樓外側空間",11,"教學大樓外側請依主要動線通行；留意轉角及樹木遮蔽處，發現照明或地面問題請通知校內人員。",57.7,22.9],
+[6,"南智洗車場旁",11,"鄰近洗車及車輛動線，請走行人通道，不在車輛進出處停留；需要通過作業區時依校內人員指引。",89,32],
+[7,"操場旁通行區",11,"在操場周邊留意運動中的人與器材，使用指定步道；若場地或器材有損壞，告訴老師，不自行處理。",93.5,67.6],
+[8,"東南側樹叢邊",11,"此處靠近校園邊界與樹叢。不要鑽入視線不易到達的區域，遇到異常或感到不安，前往有人處並求助。",77.2,77.7],
+[9,"園藝區周邊",11,"園藝區可能有工具、植栽或地面高低差。按指定路線行走，不碰觸未收妥的工具，並向老師反映狀況。",65.8,85.8],
+[10,"垃圾場周邊",11,"垃圾場附近留意濕滑地面、搬運作業及尖銳物品；未經允許不要進入，發現危險請通知校內人員。",62.5,82.3],
+[11,"教學大樓外側通道",11,"通行時留意建物轉角、出入口與人車動線，保持通道暢通；發現照明或設備異常請告知老師。",58.7,60.3],
+[12,"學生餐廳 2F",12,"此點位於圖面標示的二樓空間。使用走廊時不奔跑、不推擠；若發現門窗、照明或設備異常，通知教職員。",29,27.7],
+[13,"蕙質樓 2F",12,"此點位於圖面標示的二樓空間。留意通道與出入口是否暢通，遇到不熟悉或讓你不舒服的狀況，立即找可信任的教職員。",40.3,27.7],
+[14,"行政大樓 3F",14,"圖面標示的三樓位置。經過走廊或外廊時勿攀越欄杆，保持通道暢通；發現設備異常請通知校內人員。",83.4,32.4],
+[15,"行政大樓 4F",15,"圖面標示的四樓位置。靠近外廊或樓梯請注意安全、不奔跑；遇到照明故障、阻塞或感到不安，找教職員協助。",78.6,44.8]
+];
+const board=document.getElementById("board"),stage=document.getElementById("stage"),detail=document.getElementById("detail"),list=document.getElementById("spotList");
+function selectSpot(s,el){document.querySelectorAll(".zone").forEach(b=>b.classList.toggle("active",b===el||(!el&&b.dataset.id==s[0])));document.querySelectorAll(".spot-list button").forEach(b=>b.classList.toggle("active",b.dataset.id==s[0]));detail.innerHTML='<span class="badge">⚠ 危險空間編號 '+s[0]+'</span><h2>'+s[1]+'</h2><p>對照圖面區域 '+s[0]+'｜報告照片第 '+s[2]+' 頁</p><div class="advice"><b>建議怎麼做</b><br>'+s[3]+'</div><img src="photos/page-'+s[2]+'.png" alt="'+s[1]+'照片" onerror="this.style.display=\'none\'"><a class="photo" href="photos/page-'+s[2]+'.png" target="_blank" rel="noopener">查看改善報告照片 ↗</a>'}
+spots.forEach(s=>{const b=document.createElement("button");b.className="zone";b.textContent=s[0];b.dataset.id=s[0];b.style.left=s[4]+"%";b.style.top=s[5]+"%";b.setAttribute("aria-label","危險空間 "+s[0]+"："+s[1]);b.title="編號 "+s[0]+"｜"+s[1];b.addEventListener("mouseenter",()=>selectSpot(s,b));b.addEventListener("focus",()=>selectSpot(s,b));b.addEventListener("click",()=>selectSpot(s,b));board.appendChild(b);const li=document.createElement("button");li.textContent=s[0]+"｜"+s[1];li.dataset.id=s[0];li.onclick=()=>{selectSpot(s,null);document.getElementById("map").scrollIntoView({behavior:"smooth"})};list.appendChild(li)});
+document.getElementById("search").addEventListener("input",e=>{const q=e.target.value.trim().toLowerCase();document.querySelectorAll(".zone,.spot-list button").forEach(b=>{const s=spots.find(x=>x[0]==b.dataset.id);b.style.display=!q||String(s[0]).includes(q)||s[1].toLowerCase().includes(q)?"":"none"})});
+let rx=24,rz=-1,scale=.94,drag=null;function apply(){board.style.transform="rotateX("+rx+"deg) rotateZ("+rz+"deg) scale("+scale+")"}stage.addEventListener("pointerdown",e=>{if(e.target.closest(".zone"))return;drag={x:e.clientX,y:e.clientY,rx,rz};stage.setPointerCapture(e.pointerId)});stage.addEventListener("pointermove",e=>{if(!drag)return;rz=drag.rz+(e.clientX-drag.x)*.12;rx=Math.max(5,Math.min(65,drag.rx-(e.clientY-drag.y)*.12));apply()});stage.addEventListener("pointerup",()=>drag=null);stage.addEventListener("pointercancel",()=>drag=null);stage.addEventListener("wheel",e=>{e.preventDefault();scale=Math.max(.65,Math.min(1.2,scale+(e.deltaY<0?.04:-.04)));apply()},{passive:false});document.getElementById("resetView").onclick=()=>{rx=24;rz=-1;scale=.94;apply()};
+</script></body></html>
