@@ -21,6 +21,49 @@ dialog{width:min(920px,calc(100% - 28px));border:0;border-radius:18px;padding:0;
 @media(max-width:850px){.hero-grid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.checks{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.wrap{width:min(100% - 28px,1160px)}.top{align-items:flex-start;flex-direction:column}.nav{gap:2px}.nav a{padding:7px 9px}.hero{padding:38px 0 26px}.stats{grid-template-columns:1fr 1fr}.stat:last-child{grid-column:1/-1}.grid,.patrol-grid,.checks{grid-template-columns:1fr}.list{grid-template-columns:1fr}.section-head{display:block}.source{align-items:flex-start;flex-direction:column}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* 教學導覽與互動模組 */
+:root{--ink:#173f43;--deep:#102f33;--leaf:#a9bd35;--mint:#eaf1dd;--paper:#f7f8f2;--white:#fff;--muted:#5b6d6d;--line:#dce5dd;--orange:#c66b37;--shadow:0 16px 40px #16383b12;--coral:#f07854;--sky:#ccebf1;--sun:#ffd56a}
+body{background:radial-gradient(ellipse at 8% 8%,#fff3d2 0,transparent 23%),var(--paper)}
+header{position:sticky;top:0;z-index:5;box-shadow:0 5px 18px #102f3318}
+.brand:before{content:"🧭 ";font-size:1.2em}
+.hero{position:relative;overflow:hidden;background:linear-gradient(130deg,#fff0cf 0%,#e8f5dc 48%,#e2f4f5 100%)}
+.hero:after{content:"🌿　🔎　🛡️";position:absolute;right:4%;bottom:3%;font-size:clamp(2rem,7vw,5rem);opacity:.28;transform:rotate(-7deg);pointer-events:none}
+.hero-grid{position:relative;z-index:1}
+.hero h1{color:#12383b}
+.eyebrow{display:inline-block;padding:6px 11px;background:#fff8;border-radius:99px;letter-spacing:.07em}
+.hero-note{border-radius:24px;border:2px solid #fff;transform:rotate(1deg)}
+.stats{gap:18px}.stat{border-radius:22px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}.stat:hover{transform:translateY(-5px);box-shadow:0 20px 38px #16383b20}
+.stat:nth-child(1){border-bottom:5px solid var(--coral)}.stat:nth-child(2){border-bottom:5px solid #48aab4}.stat:nth-child(3){border-bottom:5px solid #e9bb42}
+.section{margin-top:52px}.section h2{font-size:1.9rem}.section h2:before{content:"✦ ";color:var(--coral);font-size:.8em}
+.card{border-radius:22px;transition:transform .2s,box-shadow .2s;border-top:4px solid #91b44d}.card:hover{transform:translateY(-5px) rotate(-.3deg);box-shadow:0 20px 44px #16383b20}
+.filter{transition:all .18s}.filter:hover{transform:translateY(-2px);border-color:#87a344}
+.btn{background:#17636a;box-shadow:0 4px 0 #0e4247}.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #0e4247}
+.panel{border-radius:22px}.list li{transition:background .18s,transform .18s}.list li:hover{background:#e6efcc;transform:translateX(3px)}
+.check{border-radius:18px;position:relative;padding-top:20px}.check:before{content:"✓";display:grid;place-items:center;width:28px;height:28px;background:#eaf1dd;color:#667d25;border-radius:50%;font-weight:900;margin-bottom:7px}
+.source{border:2px dashed #b5ca8f;border-radius:24px}
+.learning{margin:36px 0 50px;padding:clamp(20px,4vw,38px);background:linear-gradient(125deg,#16484d,#237077);border-radius:28px;color:#fff;box-shadow:0 22px 55px #12383b25;position:relative;overflow:hidden}
+.learning:after{content:"🎒";position:absolute;right:3%;top:2%;font-size:5rem;opacity:.17}
+.learning h2{font-size:clamp(1.5rem,3vw,2rem);margin:0}.learning p{color:#d9eeee}
+.lesson-steps{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.step-chip{border:1px solid #a6d2d2;border-radius:99px;padding:6px 12px;font-size:.88rem;color:#efffff}.step-chip b{color:#ffdb78}
+.scenario-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.scenario{background:#fff;color:var(--ink);border:0;border-radius:17px;text-align:left;padding:16px;cursor:pointer;font:inherit;box-shadow:0 5px 0 #c6ddd9;transition:transform .2s,box-shadow .2s}
+.scenario:hover{transform:translateY(-3px);box-shadow:0 8px 0 #c6ddd9}.scenario[aria-pressed=true]{outline:3px solid #ffd56a;background:#fff8e6}
+.scenario strong{display:block;font-size:1rem;margin-bottom:4px}.scenario span{font-size:.88rem;color:#5b6d6d}
+.lesson-answer{margin-top:15px;padding:16px 18px;background:#ffffff16;border:1px solid #ffffff35;border-radius:16px;min-height:70px}.lesson-answer strong{color:#ffdb78}
+.quiz{margin-top:34px;padding:clamp(20px,4vw,32px);background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+.quiz h2{margin:0}.quiz-intro{color:var(--muted);margin:4px 0 18px}
+.question{padding:16px 0;border-top:1px solid var(--line)}.question:first-of-type{border-top:0}
+.question h3{font-size:1.05rem;margin:0 0 10px}.answers{display:flex;gap:8px;flex-wrap:wrap}
+.answer{border:1px solid #cedbd0;background:#f8faf5;padding:9px 13px;border-radius:12px;cursor:pointer;font:inherit;color:var(--ink)}.answer:hover{background:#eef4df}.answer[aria-pressed=true]{background:#173f43;color:white}
+.quiz-result{margin-top:16px;padding:14px 16px;border-radius:14px;background:#edf4df;color:#29423d;display:none}.quiz-result.show{display:block}
+.progress-wrap{height:9px;background:#ffffff33;border-radius:99px;overflow:hidden;margin-top:14px}.progress-bar{height:100%;width:0;background:#ffd56a;transition:width .3s}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+dialog{border-radius:24px}
+footer{background:linear-gradient(100deg,#102f33,#174b50)}
+@media(max-width:700px){.scenario-row{grid-template-columns:1fr}.hero:after{font-size:2rem;right:4%;bottom:1%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -28,8 +71,28 @@ dialog{width:min(920px,calc(100% - 28px));border:0;border-radius:18px;padding:0;
 <section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">Campus safety · 112學年度</div><h1>校園空間安全檢視</h1><p>把報告中的危險角落、巡檢路線與安全檢查週期整理在同一頁。輸入地點快速查找，也可直接開啟報告對照照片與原始資料。</p></div><aside class="hero-note"><strong>資料基準：113 年 4 月 8 日</strong><span>內容整理自「112學年校園危險空間改善報告」。巡檢資料依原報告呈現，實際執行情形請以校內最新紀錄為準。</span></aside></div></section>
 <main class="wrap">
 <div class="stats" aria-label="資料摘要"><div class="stat"><b>15 處</b><span>報告列出的校園危險角落</span></div><div class="stat"><b>24 點</b><span>校園與建物巡邏點（10＋14）</span></div><div class="stat"><b>每日 2 次</b><span>原報告記載的安全巡檢頻率</span></div></div>
+<section class="learning" id="lesson">
+<div class="eyebrow">一起當校園安全觀察員</div>
+<h2>看見風險，知道怎麼做</h2>
+<p>這堂小任務約 3 分鐘：先觀察情境、再找巡查資料，最後用小測驗確認你學會了什麼。</p>
+<div class="lesson-steps"><span class="step-chip"><b>01</b> 看情境</span><span class="step-chip"><b>02</b> 找地點</span><span class="step-chip"><b>03</b> 做判斷</span></div>
+<div class="scenario-row" role="group" aria-label="選擇校園安全情境">
+<button class="scenario" data-scenario="alone" aria-pressed="false"><strong>🌙 放學後經過偏僻角落</strong><span>想一想：怎麼走會比較安心？</span></button>
+<button class="scenario" data-scenario="hazard" aria-pressed="false"><strong>🧱 發現設備損壞或地面濕滑</strong><span>想一想：第一步可以做什麼？</span></button>
+<button class="scenario" data-scenario="support" aria-pressed="false"><strong>🆘 需要幫忙或感到不安全</strong><span>想一想：可以找誰、怎麼求助？</span></button>
+</div>
+<div class="lesson-answer" id="scenarioAnswer" aria-live="polite">選一個情境開始吧！安全不是要自己冒險處理，先離開危險、告訴可信任的大人或校內人員。</div>
+<div class="progress-wrap" aria-label="學習進度"><div class="progress-bar" id="lessonProgress"></div></div>
+</section>
+<section class="quiz" id="quiz">
+<h2>🎯 三題安全快問快答</h2><p class="quiz-intro">選出你認為最合適的行動，送出後就能看到回饋。</p>
+<div class="question" data-q="0"><h3>1. 在偏僻角落感到不安心，較好的做法是？</h3><div class="answers"><button class="answer" data-correct="true">前往明亮、人多的地方，並告知可信任的大人</button><button class="answer">自己留下來調查原因</button></div></div>
+<div class="question" data-q="1"><h3>2. 發現地面濕滑或設備損壞，可以怎麼做？</h3><div class="answers"><button class="answer">先小心避開，再通知老師或校內人員</button><button class="answer" data-correct="true">先小心避開，再通知老師或校內人員</button><button class="answer">不必告訴任何人</button></div></div>
+<div class="question" data-q="2"><h3>3. 報告記載的巡檢資料代表什麼？</h3><div class="answers"><button class="answer">提供巡查位置與頻率的參考，仍要留意最新校內公告</button><button class="answer" data-correct="true">提供巡查位置與頻率的參考，仍要留意最新校內公告</button><button class="answer">保證每個地方此刻都沒有風險</button></div></div>
+<button class="btn" id="submitQuiz" style="margin-top:10px">看看我的學習成果 ✨</button><div class="quiz-result" id="quizResult" aria-live="polite"></div>
+</section>
 <section class="section" id="corners"><div class="section-head"><div><h2>危險角落</h2><p>可用關鍵字搜尋地點，或依報告分類篩選。</p></div></div><div class="searchbox"><label for="search" class="sr-only"></label><input id="search" type="search" placeholder="搜尋地點，例如：宿舍、餐廳、樓梯間" aria-label="搜尋危險角落與空間"></div><div class="filters" role="group" aria-label="地點分類"><button class="filter" data-filter="all" aria-pressed="true">全部地點</button><button class="filter" data-filter="corner" aria-pressed="false">危險角落</button><button class="filter" data-filter="safety" aria-pressed="false">性平事件風險空間</button></div><div class="grid" id="cards"></div><div class="empty" id="empty">沒有符合條件的地點，換個關鍵字試試。</div></section>
-<section class="section" id="patrol"><div class="section-head"><div><h2>安全巡檢點</h2><p>依報告記載，兩組巡檢人員每日各巡檢 2 次。</p></div></div><div class="patrol-grid"><article class="panel"><h3>校園偏僻區域｜保全巡邏 10 點</h3><p class="sub">校園及建築物內的巡邏位置</p><ol class="list"><li><b>①</b>總務處前樓梯口</li><li><b>②</b>職評室前消防栓</li><li><b>③</b>蕙質樓電梯</li><li><b>④</b>餐廳南側機車棚</li><li><b>⑤</b>餐廳電梯</li><li><b>⑥</b>洗衣場外樓梯</li><li><b>⑦</b>宿舍電梯外</li><li><b>⑧</b>垃圾場內側</li><li><b>⑨</b>攀岩場外樓梯</li><li><b>⑩</b>性別友善廁所外牆</li></ol></article><article class="panel"><h3>主要建物內偏僻區域｜技工友巡邏 14 點</h3><p class="sub">依建物分組列出，便於快速核對</p><ul class="list"><li><b>行政大樓 ①</b>模擬工廠 1F 東南側</li><li><b>行政大樓 ②</b>實輔處 2F 東南側</li><li><b>行政大樓 ③</b>禮堂 3F 東南側</li><li><b>行政大樓 ④</b>禮堂 3F 東北側</li><li><b>行政大樓 ⑤</b>禮堂 4F 西南側</li><li><b>行政大樓 ⑥</b>禮堂 4F 西北側</li><li><b>教學大樓 ⑦</b>門市教室 2F 外露台</li><li><b>教學大樓 ⑧</b>丁梯 3F 頂樓梯</li><li><b>教學大樓 ⑨</b>乙梯 4F 頂樓梯間</li><li><b>教學大樓 ⑩</b>丙梯 4F 頂樓梯間</li><li><b>餐廳 ⑪</b>餐廳 1F 南側</li><li><b>餐廳 ⑫</b>餐廳 1F 北側</li><li><b>餐廳 ⑬</b>餐廳 2F 南側</li><li><b>餐廳 ⑭</b>餐廳 2F 北側</li></ul></article></div></section>
+<section class="section" id="patrol"><div class="section-head"><div><h2>安全巡檢點</h2><p>依報告記載，兩組巡檢人員每日各巡檢 2 次。</p></div></div><div class="patrol-grid"><article class="panel"><h3>校園偏僻區域｜保全巡邏 10 點</h3><p class="sub">校園及建築物內的巡邏位置</p><p class="sub">小提示：巡檢清單是路線參考，遇到立即危險請先遠離並求助。</p><ol class="list"><li><b>①</b>總務處前樓梯口</li><li><b>②</b>職評室前消防栓</li><li><b>③</b>蕙質樓電梯</li><li><b>④</b>餐廳南側機車棚</li><li><b>⑤</b>餐廳電梯</li><li><b>⑥</b>洗衣場外樓梯</li><li><b>⑦</b>宿舍電梯外</li><li><b>⑧</b>垃圾場內側</li><li><b>⑨</b>攀岩場外樓梯</li><li><b>⑩</b>性別友善廁所外牆</li></ol></article><article class="panel"><h3>主要建物內偏僻區域｜技工友巡邏 14 點</h3><p class="sub">依建物分組列出，便於快速核對</p><ul class="list"><li><b>行政大樓 ①</b>模擬工廠 1F 東南側</li><li><b>行政大樓 ②</b>實輔處 2F 東南側</li><li><b>行政大樓 ③</b>禮堂 3F 東南側</li><li><b>行政大樓 ④</b>禮堂 3F 東北側</li><li><b>行政大樓 ⑤</b>禮堂 4F 西南側</li><li><b>行政大樓 ⑥</b>禮堂 4F 西北側</li><li><b>教學大樓 ⑦</b>門市教室 2F 外露台</li><li><b>教學大樓 ⑧</b>丁梯 3F 頂樓梯</li><li><b>教學大樓 ⑨</b>乙梯 4F 頂樓梯間</li><li><b>教學大樓 ⑩</b>丙梯 4F 頂樓梯間</li><li><b>餐廳 ⑪</b>餐廳 1F 南側</li><li><b>餐廳 ⑫</b>餐廳 1F 北側</li><li><b>餐廳 ⑬</b>餐廳 2F 南側</li><li><b>餐廳 ⑭</b>餐廳 2F 北側</li></ul></article></div></section>
 <section class="section" id="checks"><div class="section-head"><div><h2>安全檢查週期</h2><p>照報告所列的執行頻率整理。</p></div></div><div class="checks"><div class="check"><strong>建物安全檢查</strong><span>全校每 2 年 1 次</span></div><div class="check"><strong>消防安全檢查</strong><span>每半年 1 次</span></div><div class="check"><strong>電梯保養</strong><span>每月 1 次</span></div><div class="check"><strong>電氣設備（配線）</strong><span>每月巡檢 1 次</span></div><div class="check"><strong>緊急求助鈴</strong><span>每月巡檢 1 次</span></div><div class="check"><strong>監視器</strong><span>每月巡檢 1 次</span></div></div></section>
 <section class="source" id="source"><div><strong>照片資料說明</strong><p>地點名稱、巡檢位置與檢查週期依 112 學年報告整理；報告第 11～27 頁影像已複製至本站，訪客不需登入即可瀏覽。</p></div><div class="source-links"><a href="#corners">回到照片清單 ↑</a></div></section>
 </main><footer><div class="wrap footer-row"><strong>國立臺南特殊教育學校｜校園空間安全檢視</strong><span>資料來源：112學年校園危險空間改善報告（113.4.8）</span></div></footer>
@@ -75,6 +138,24 @@ function openReport(page,name){
  const image=document.getElementById("reportImage"); image.src="photos/page-"+page+".png"; image.alt=name+"，報告第 "+page+" 頁";
  document.getElementById("photoDialog").showModal();
 }
+
+document.querySelectorAll(".scenario").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll(".scenario").forEach(b=>b.setAttribute("aria-pressed",String(b===btn)));
+ const notes={alone:"<strong>建議：</strong>盡量走明亮、人多的路線；可結伴同行，並讓老師或家人知道。不要為了確認狀況而獨自靠近。",hazard:"<strong>建議：</strong>先保持距離、提醒旁人小心，再通知老師或校內人員處理；不要自行碰觸損壞設備。",support:"<strong>建議：</strong>移到安全且有人看得到的地方，立即找可信任的老師、教職員或值勤人員協助。緊急時依校內緊急通報方式求助。"};
+ document.getElementById("scenarioAnswer").innerHTML=notes[btn.dataset.scenario];
+ document.getElementById("lessonProgress").style.width="34%";
+}));
+document.querySelectorAll(".answer").forEach(btn=>btn.addEventListener("click",()=>{
+ const q=btn.closest(".question");q.querySelectorAll(".answer").forEach(b=>b.setAttribute("aria-pressed",String(b===btn)));
+ document.getElementById("lessonProgress").style.width=(34+Math.round(document.querySelectorAll('.question .answer[aria-pressed=true]').length/3*66))+"%";
+}));
+document.getElementById("submitQuiz").addEventListener("click",()=>{
+ const qs=[...document.querySelectorAll(".question")], done=qs.filter(q=>q.querySelector('.answer[aria-pressed="true"]')).length;
+ const score=qs.filter(q=>q.querySelector('.answer[aria-pressed="true"]')?.dataset.correct==="true").length;
+ const out=document.getElementById("quizResult");out.classList.add("show");
+ out.innerHTML=done<3?"再選完 "+(3-done)+" 題，就可以看學習成果。":(score===3?"太棒了！3 題全對，你已經掌握安全觀察與求助原則。":"你答對 "+score+" / 3 題。看看回饋，再想想：先確保安全、再找可信任的大人協助。");
+ if(done===3)document.getElementById("lessonProgress").style.width="100%";
+});
 document.getElementById("search").addEventListener("input",render);
 document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{active=b.dataset.filter;document.querySelectorAll(".filter").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render()}));
 document.getElementById("closeModal").addEventListener("click",()=>document.getElementById("photoDialog").close());
