@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>南特校園 3D 互動平面圖</title>
+<style>
+:root{--bg:#fffbd9;--fg:#222;--pn:rgba(255,255,255,.88)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a2a22;--fg:#eee;--pn:rgba(40,40,40,.88)}}
+:root[data-theme="dark"]{--bg:#2a2a22;--fg:#eee;--pn:rgba(40,40,40,.88)}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;overflow:hidden}
+#c{display:block;width:100%;height:100%}
+#ui{position:fixed;left:12px;top:calc(12px + env(safe-area-inset-top,0px));background:var(--pn);padding:8px 10px;border-radius:10px;font-size:13px;line-height:1.6}
+#ui button{margin:2px 4px 2px 0;padding:4px 10px;border-radius:6px;border:1px solid #888;background:transparent;color:var(--fg);cursor:pointer}
+</style></head><body>
+<canvas id="c"></canvas>
+<div id="ui"><b>南特校園 3D</b><br>左鍵旋轉・右鍵/雙指平移・滾輪/捏合縮放<br>
+<button id="rs">重設視角</button><button id="tl">顯示/隱藏標籤</button><button id="tp">俯視</button></div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const W=p=>(p-1260)/30, Z=p=>(p-740)/30;
+const cv=document.getElementById('c');
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});R.setPixelRatio(devicePixelRatio);R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+const S=new THREE.Scene();
+const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+S.background=new THREE.Color(dark?0x3a3228:0xe9d9bf);
+const cam=new THREE.PerspectiveCamera(45,1,.1,1000);
+const ctl=new THREE.OrbitControls(cam,cv);ctl.enableDamping=true;ctl.maxPolarAngle=Math.PI/2.05;ctl.minDistance=10;ctl.maxDistance=180;
+function home(top){cam.position.set(top?0:-10,top?110:70,top?.1:75);ctl.target.set(0,0,0);ctl.update();}
+home();
+S.add(new THREE.HemisphereLight(0xffffff,0xaa9977,1.5));
+const sun=new THREE.DirectionalLight(0xffffff,.6);sun.position.set(-30,60,40);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-50,right:50,top:35,bottom:-35,near:10,far:200});sun.shadow.bias=-.0005;S.add(sun);
+const fz=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.fillStyle='#dcdcdc';g.fillRect(0,0,256,256);
+for(let i=0;i<6000;i++){const x=Math.random()*256,y=Math.random()*256,a=Math.random()*6.28,l=3+Math.random()*6;g.strokeStyle=Math.random()<.5?'rgba(255,255,255,.55)':'rgba(110,110,110,.4)';g.lineWidth=1;g.beginPath();g.moveTo(x,y);g.lineTo(x+Math.cos(a)*l,y+Math.sin(a)*l);g.stroke();}
+const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(5,5);return t;})();
+const mat=c=>new THREE.MeshStandardMaterial({color:c,map:fz,bumpMap:fz,bumpScale:2,roughness:1,metalness:0});
+function RB(w,h,d,r){const g=new THREE.BoxGeometry(w,h,d,6,6,6),p=g.attributes.position,v=new THREE.Vector3(),q=new THREE.Vector3();r=Math.min(r,w/2-.01,h/2-.01,d/2-.01);
+for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);q.set(Math.max(-w/2+r,Math.min(w/2-r,v.x)),Math.max(-h/2+r,Math.min(h/2-r,v.y)),Math.max(-d/2+r,Math.min(d/2-r,v.z)));v.sub(q).normalize().multiplyScalar(r).add(q);p.setXYZ(i,v.x,v.y,v.z);}
+g.computeVertexNormals();return g;}
+const labels=new THREE.Group();S.add(labels);
+function label(t,x,y,z,s=1){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');
+g.font='bold 64px "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif';g.textAlign='center';g.textBaseline='middle';
+g.lineWidth=10;g.strokeStyle='#fff';g.strokeText(t,256,64);g.fillStyle='#222';g.fillText(t,256,64);
+const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false}));
+sp.position.set(x,y,z);sp.scale.set(8*s,2*s,1);sp.renderOrder=9;labels.add(sp);}
+function poly(pts,col,y=0){const sh=new THREE.Shape(pts.map(p=>new THREE.Vector2(W(p[0]),-Z(p[1]))));
+const m=new THREE.Mesh(new THREE.ShapeGeometry(sh),mat(col));m.rotation.x=-Math.PI/2;m.position.y=y;S.add(m);}
+function box(x1,y1,x2,y2,h,col,t,ls){const w=(x2-x1)/30,d=(y2-y1)/30;
+const m=new THREE.Mesh(RB(w*.97,h,d*.97,Math.min(.6,h/2.2)),mat(col));m.position.set(W((x1+x2)/2),h/2+.02,Z((y1+y2)/2));S.add(m);
+if(t)label(t,m.position.x,h+1.6,m.position.z,ls||1);}
+// ground & roads
+const gr=new THREE.Mesh(RB(90,1.2,53,.5),mat(dark?0x6a6455:0xfff3cf));gr.position.y=-.62;S.add(gr);
+const tb=new THREE.Mesh(new THREE.PlaneGeometry(400,300),mat(dark?0x5a4630:0xc9a672));tb.rotation.x=-Math.PI/2;tb.position.y=-1.3;S.add(tb);
+poly([[0,285],[0,445],[35,490],[1800,1477],[2100,1477],[1640,1380],[60,430]],0x9a9aa8,.01);
+poly([[2255,0],[2350,0],[2400,500],[2520,1100],[2520,1000],[2350,700],[2270,150]],0x9a9aa8,.01);
+// grass
+poly([[510,445],[1160,445],[1160,553],[510,553]],0x7fb849,.03);
+poly([[1158,215],[1676,205],[1676,265],[1158,265]],0x7fb849,.03);
+poly([[445,650],[510,490],[660,555],[590,665]],0x7fb849,.03);
+poly([[445,650],[600,660],[1492,1150],[1430,1235]],0x7fb849,.03);
+poly([[1690,1250],[1838,1250],[1838,1290],[1690,1375]],0x7fb849,.03);
+poly([[1875,185],[2197,185],[2197,733],[2150,733],[2150,683],[1922,683],[1922,733],[1875,733]],0xe6e2da,.04);
+poly([[510,410],[1158,410],[1158,443],[510,443]],0xe6e2da,.04);
+poly([[1787,390],[1875,390],[1875,425],[1787,425]],0xe6e2da,.04);
+// track
+poly([[590,665],[620,625],[1492,1135],[1480,1170]],0xc8202a,.06);
+const ell=(a,b,c,y)=>{const m=new THREE.Mesh(new THREE.CircleGeometry(1,64),mat(c));m.rotation.x=-Math.PI/2;m.scale.set(a,b,1);
+const g=new THREE.Group();g.add(m);g.rotation.y=-Math.PI/6.2;g.position.set(W(1108),y,Z(800));S.add(g);return g;};
+ell(13.5,7.1,0xc8202a,.07);ell(11.3,5.1,0x1a8a3e,.09);
+const rc=new THREE.Mesh(new THREE.CircleGeometry(.5,24),mat(0xc8202a));rc.rotation.x=-Math.PI/2;rc.position.set(W(1108),.11,Z(805));S.add(rc);
+label('操場',W(1108),2.5,Z(800),1.1);
+// buildings
+box(185,235,445,278,.8,0x29a8e0,'洗衣場',.6);
+box(210,278,373,337,4,0x8fb8e0);box(373,278,510,545,5,0x8fb8e0,'學生宿舍');
+box(210,337,373,372,.3,0xbad0f0,'烤肉區',.6);
+box(580,225,868,410,4,0xf08a4b,'餐廳');box(906,252,1078,410,4,0xf08a4b,'蕙質樓');
+box(1158,263,1787,490,6,0xe6b89c,'教學大樓');box(1635,490,1787,670,6,0xe6b89c);box(1546,670,1827,1225,6,0xf0a0a8,'教學大樓');
+box(1900,290,2190,730,3,0xe2ded8);box(1922,314,2149,628,5,0xc9a0dc,'行政大樓');
+box(1993,180,2167,255,2,0xa8c4f0,'南智洗車場',.7);box(2225,345,2330,605,2,0xa8c4f0,'儀安洗車場',.7);
+box(2230,628,2335,700,2,0x666666,'傳達室',.6);box(2228,260,2280,315,5,0xb0b0b0,'高壓電塔',.6);
+box(1827,933,2197,987,2.5,0x9fd0ea,'風雨廊道',.8);
+box(1565,1250,1650,1350,1,0xb0c8ee,'垃圾場',.6);label('園藝場',W(1764),1.5,Z(1310),.6);
+label('安南醫院',W(920),1,Z(100),1.3);label('文中21',W(2130),1,Z(1355),1);
+label('長和路二段140巷',W(1000),1,Z(950),1.1);label('長和路二段',W(2400),1,Z(420),1);
+// boundary wall
+const wp=[[0,285],[190,222],[530,230],[2265,78],[2350,700],[2480,1045],[1640,1380],[60,430],[0,285]];
+for(let i=0;i<wp.length-1;i++){const a=wp[i],b=wp[i+1],dx=(b[0]-a[0])/30,dz=(b[1]-a[1])/30,L=Math.hypot(dx,dz);
+const m=new THREE.Mesh(RB(L,.5,.45,.22),mat(0xe00010));m.position.set(W((a[0]+b[0])/2),.3,Z((a[1]+b[1])/2));m.rotation.y=-Math.atan2(dz,dx);S.add(m);}
+// trees
+[[97,340,1.3],[138,375,.8],[577,530,1.3],[837,485,.9],[1232,535,1.3],[1283,575,.8],[1630,205,1.3],[1598,215,.8],[2243,195,1],[2255,235,.7],[1052,935,1.3],[1090,985,.8],[1140,985,1],[1167,1035,.7],[2370,960,1.1],[2393,990,.7],[2385,1025,.7],[2007,1140,1.2],[2040,1170,.7]].forEach(t=>{
+const g=new THREE.Group(),s=t[2];const tr=new THREE.Mesh(new THREE.CylinderGeometry(.12*s,.15*s,1.4*s,6),mat(0x6b2a14));tr.position.y=.7*s;
+const cr=new THREE.Mesh(new THREE.SphereGeometry(.9*s,10,8),mat(s<.95?0xdcdc20:0x1a9a40));cr.position.y=2*s;g.add(tr,cr);g.position.set(W(t[0]),0,Z(t[1]));S.add(g);});
+function rz(){R.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();}
+addEventListener('resize',rz);rz();
+document.getElementById('rs').onclick=()=>home();
+document.getElementById('tp').onclick=()=>home(true);
+document.getElementById('tl').onclick=()=>labels.visible=!labels.visible;
+
+// felt extras
+function tile(px,py,y,c){const m=new THREE.Mesh(RB(.95,.2,.95,.08),mat(c));m.position.set(W(px),y,Z(py));S.add(m);}
+const EL=0x4b9ad8,UP=0xf2d63a,DN=0xe8a088,ML=0x6bb7e8,FM=0xe8906a;
+[[1250,330,6.1,ML],[1330,330,6.1,EL],[1410,330,6.1,UP],[1490,330,6.1,FM],[1750,300,6.1,UP],[1800,395,6.1,EL],
+[1790,935,6.1,EL],[1780,1010,6.1,UP],[1600,1190,6.1,UP],[1570,1020,6.1,FM],[1570,1100,6.1,ML],
+[600,300,4.1,ML],[600,335,4.1,FM],[640,345,4.1,EL],[600,395,4.1,UP],[940,380,4.1,UP],[1040,380,4.1,UP],[420,350,5.1,UP],
+[1960,330,3.1,ML],[1990,330,3.1,DN],[2100,690,3.1,UP],[2150,690,3.1,FM],[1960,260,3.1,EL]].forEach(t=>tile(...t));
+const car=new THREE.Group();const cb=new THREE.Mesh(RB(3,1,1.6,.4),mat(0x6f9bdc));cb.position.y=.6;const cc=new THREE.Mesh(RB(1.6,.8,1.4,.3),mat(0x8fb4ea));cc.position.set(-.2,1.3,0);car.add(cb,cc);car.position.set(W(2450),0,Z(870));car.rotation.y=-.9;S.add(car);
+function dash(a,b,n){for(let i=0;i<n;i++){const t=i/n,x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t;const m=new THREE.Mesh(RB(.9,.08,.18,.04),mat(0xf3eee4));m.position.set(W(x),.08,Z(y));m.rotation.y=-Math.atan2(b[1]-a[1],b[0]-a[0]);S.add(m);}}
+dash([40,445],[1720,1425],50);dash([2315,10],[2345,400],12);dash([2345,400],[2500,1060],20);
+label('仁愛之家',W(300),1,Z(170),.9);label('和順國中',W(200),1,Z(700),1.1);label('校門',W(2330),1,Z(760),.7);label('N ↑',W(1100),1,Z(430),.6);
+S.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+(function loop(){requestAnimationFrame(loop);ctl.update();R.render(S,cam);})();
+</script></body></html>
