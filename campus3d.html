@@ -1,38 +1,45 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>南特校園 3D 互動平面圖</title>
+<title>南特校園｜黏土風格 3D 互動地圖</title>
 <style>
-:root{--bg:#fffbd9;--fg:#222;--pn:rgba(255,255,255,.88)}
+:root{--bg:#fff1ce;--fg:#3d3a35;--pn:rgba(255,255,255,.94)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a2a22;--fg:#eee;--pn:rgba(40,40,40,.88)}}
 :root[data-theme="dark"]{--bg:#2a2a22;--fg:#eee;--pn:rgba(40,40,40,.88)}
 html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;overflow:hidden}
 #c{display:block;width:100%;height:100%}
-#ui{position:fixed;left:12px;top:calc(12px + env(safe-area-inset-top,0px));background:var(--pn);padding:8px 10px;border-radius:10px;font-size:13px;line-height:1.6}
-#ui button{margin:2px 4px 2px 0;padding:4px 10px;border-radius:6px;border:1px solid #888;background:transparent;color:var(--fg);cursor:pointer}
+#ui{position:fixed;left:12px;top:calc(12px + env(safe-area-inset-top,0px));background:var(--pn);padding:10px 12px;border:3px solid #fff;border-radius:18px;font-size:13px;line-height:1.7;box-shadow:0 8px 22px #573d2b33}
+#ui b{color:#a44d41;font-size:15px}
+#ui button{margin:3px 4px 3px 0;padding:5px 12px;border-radius:999px;border:2px solid #fff;background:#ffd36f;color:#57432b;font-weight:800;cursor:pointer;box-shadow:0 3px 0 #d59c3f}
+#ui button:nth-of-type(2){background:#9be1d0;box-shadow:0 3px 0 #60ad9c}
+#ui button:nth-of-type(3){background:#f3a89f;box-shadow:0 3px 0 #cc7d77}
+#ui button:hover{transform:translateY(-1px);filter:saturate(1.15)}
 </style></head><body>
 <canvas id="c"></canvas>
-<div id="ui"><b>南特校園 3D</b><br>左鍵旋轉・右鍵/雙指平移・滾輪/捏合縮放<br>
+<div id="ui"><b>南特校園｜黏土模型</b><br>拖曳旋轉・右鍵/雙指平移・滾輪縮放<br>
 <button id="rs">重設視角</button><button id="tl">顯示/隱藏標籤</button><button id="tp">俯視</button></div>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 const W=p=>(p-1260)/30, Z=p=>(p-740)/30;
 const cv=document.getElementById('c');
-const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});R.setPixelRatio(devicePixelRatio);R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.12;R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
 const S=new THREE.Scene();
 const dark=matchMedia('(prefers-color-scheme:dark)').matches;
-S.background=new THREE.Color(dark?0x3a3228:0xe9d9bf);
+S.background=new THREE.Color(dark?0x384550:0x9eddf3);
 const cam=new THREE.PerspectiveCamera(45,1,.1,1000);
 const ctl=new THREE.OrbitControls(cam,cv);ctl.enableDamping=true;ctl.maxPolarAngle=Math.PI/2.05;ctl.minDistance=10;ctl.maxDistance=180;
 function home(top){cam.position.set(top?0:-10,top?110:70,top?.1:75);ctl.target.set(0,0,0);ctl.update();}
 home();
-S.add(new THREE.HemisphereLight(0xffffff,0xaa9977,1.5));
-const sun=new THREE.DirectionalLight(0xffffff,.6);sun.position.set(-30,60,40);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-50,right:50,top:35,bottom:-35,near:10,far:200});sun.shadow.bias=-.0005;S.add(sun);
+S.add(new THREE.HemisphereLight(0xfff6df,0x9ab7a4,2.05));
+const sun=new THREE.DirectionalLight(0xfff3d9,1.25);sun.position.set(-30,60,40);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-50,right:50,top:35,bottom:-35,near:10,far:200});sun.shadow.bias=-.0005;S.add(sun);
 const fz=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.fillStyle='#dcdcdc';g.fillRect(0,0,256,256);
 for(let i=0;i<6000;i++){const x=Math.random()*256,y=Math.random()*256,a=Math.random()*6.28,l=3+Math.random()*6;g.strokeStyle=Math.random()<.5?'rgba(255,255,255,.55)':'rgba(110,110,110,.4)';g.lineWidth=1;g.beginPath();g.moveTo(x,y);g.lineTo(x+Math.cos(a)*l,y+Math.sin(a)*l);g.stroke();}
 const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(5,5);return t;})();
-const mat=c=>new THREE.MeshStandardMaterial({color:c,map:fz,bumpMap:fz,bumpScale:2,roughness:1,metalness:0});
+const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.93,metalness:0});
+const clayCream=new THREE.MeshStandardMaterial({color:0xfff1cf,roughness:.9});
+const clayGlass=[0x82d8e8,0x9ce4d0,0xffd477,0xffa99e].map(color=>new THREE.MeshStandardMaterial({color,roughness:.72}));
+const roofPalette=[0xffd16f,0xf69a91,0x83d7c7,0x9cbaf2,0xc1a0dc];
 function RB(w,h,d,r){const g=new THREE.BoxGeometry(w,h,d,6,6,6),p=g.attributes.position,v=new THREE.Vector3(),q=new THREE.Vector3();r=Math.min(r,w/2-.01,h/2-.01,d/2-.01);
 for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);q.set(Math.max(-w/2+r,Math.min(w/2-r,v.x)),Math.max(-h/2+r,Math.min(h/2-r,v.y)),Math.max(-d/2+r,Math.min(d/2-r,v.z)));v.sub(q).normalize().multiplyScalar(r).add(q);p.setXYZ(i,v.x,v.y,v.z);}
 g.computeVertexNormals();return g;}
@@ -44,9 +51,27 @@ const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(
 sp.position.set(x,y,z);sp.scale.set(8*s,2*s,1);sp.renderOrder=9;labels.add(sp);}
 function poly(pts,col,y=0){const sh=new THREE.Shape(pts.map(p=>new THREE.Vector2(W(p[0]),-Z(p[1]))));
 const m=new THREE.Mesh(new THREE.ShapeGeometry(sh),mat(col));m.rotation.x=-Math.PI/2;m.position.y=y;S.add(m);}
-function box(x1,y1,x2,y2,h,col,t,ls){const w=(x2-x1)/30,d=(y2-y1)/30;
-const m=new THREE.Mesh(RB(w*.97,h,d*.97,Math.min(.6,h/2.2)),mat(col));m.position.set(W((x1+x2)/2),h/2+.02,Z((y1+y2)/2));S.add(m);
-if(t)label(t,m.position.x,h+1.6,m.position.z,ls||1);}
+function box(x1,y1,x2,y2,h,col,t,ls){
+const w=(x2-x1)/30,d=(y2-y1)/30,cx=W((x1+x2)/2),cz=Z((y1+y2)/2);
+const m=new THREE.Mesh(RB(w*.97,h,d*.97,Math.min(.85,h/2.15)),mat(col));m.position.set(cx,h/2+.02,cz);S.add(m);
+if(h>=2.5&&w>=3){
+  const roof=new THREE.Mesh(RB(w+.38,.34,d+.38,.28),roofPalette[Math.abs(Math.floor(x1+y1))%roofPalette.length]);
+  roof.position.set(cx,h+.18,cz);S.add(roof);
+  const faceZ=cz+d*.97/2+.075,cols=Math.max(2,Math.min(12,Math.floor(w/1.55))),rows=Math.max(1,Math.min(3,Math.floor((h-.65)/1.45)));
+  for(let row=0;row<rows;row++)for(let colN=0;colN<cols;colN++){
+    const wx=cx-w*.36+(cols===1?0:colN*(w*.72/(cols-1))),wy=.9+row*1.45;
+    const frame=new THREE.Mesh(RB(.88,.9,.16,.17),clayCream);frame.position.set(wx,wy,faceZ);S.add(frame);
+    const pane=new THREE.Mesh(RB(.68,.68,.12,.13),clayGlass[(colN+row*2+Math.floor(x1/100))%clayGlass.length]);pane.position.set(wx,wy,faceZ+.095);S.add(pane);
+  }
+  if(w>=5.3){
+    const doorZ=cz+d*.97/2+.13;
+    const frame=new THREE.Mesh(RB(1.35,2.15,.22,.2),clayCream);frame.position.set(cx,1.08,doorZ);S.add(frame);
+    const door=new THREE.Mesh(RB(1.02,1.78,.16,.18),roofPalette[Math.abs(Math.floor(x2+y1))%roofPalette.length]);door.position.set(cx,.91,doorZ+.12);S.add(door);
+    const awning=new THREE.Mesh(RB(1.95,.2,.72,.12),roofPalette[(Math.abs(Math.floor(x1+y2))+2)%roofPalette.length]);awning.position.set(cx,2.18,doorZ+.24);S.add(awning);
+  }
+}
+if(t)label(t,cx,h+1.75,cz,ls||1);
+}
 // ground & roads
 const gr=new THREE.Mesh(RB(90,1.2,53,.5),mat(dark?0x6a6455:0xfff3cf));gr.position.y=-.62;S.add(gr);
 const tb=new THREE.Mesh(new THREE.PlaneGeometry(400,300),mat(dark?0x5a4630:0xc9a672));tb.rotation.x=-Math.PI/2;tb.position.y=-1.3;S.add(tb);
