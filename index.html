@@ -92,6 +92,14 @@ dialog::backdrop{background:#102b2dbb}
 .modal-head h2{font-size:1.08rem;margin:0}
 .close{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 11px;font:inherit;cursor:pointer}
 .modal-body{padding:16px}
+.pinpop{width:min(560px,calc(100% - 28px))}
+.pinpop .modal-body{display:grid;gap:12px}
+.pinpop .pp-title{font-size:1.15rem;font-weight:700;margin:0;color:var(--ink)}
+.pinpop .pp-desc{margin:0;color:#3e5150;font-size:.97rem}
+.pinpop .pp-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:.85rem;color:var(--muted)}
+.pinpop .pp-meta .index{font-size:.78rem}
+.pinpop .pp-img{display:block;width:100%;max-height:52vh;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#f1f2ee}
+.pinpop .pp-actions{display:flex;gap:8px;flex-wrap:wrap}
 @media (max-width:900px){
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .intro-cols,.map-wrap,.two{grid-template-columns:1fr}
@@ -197,6 +205,22 @@ dialog::backdrop{background:#102b2dbb}
   <div class="wrap"><span>國立臺南特殊教育學校｜校園危險地圖</span></div>
 </footer>
 
+<dialog id="pinDialog" class="pinpop" aria-labelledby="ppTitle">
+  <div class="modal-head">
+    <h2 id="ppTitle">地點說明</h2>
+    <button class="close" type="button" id="closePin" aria-label="關閉">關閉 ✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="pp-meta"><span class="index" id="ppNo"></span><span id="ppTag"></span></div>
+    <img class="pp-img" id="ppImg" alt="">
+    <p class="pp-title" id="ppName"></p>
+    <p class="pp-desc" id="ppDesc"></p>
+    <p class="muted" id="ppHint" style="font-size:.88rem;margin:0;color:var(--muted)"></p>
+    <div class="pp-actions">
+      <button class="btn" type="button" id="ppList">在地點清單查看</button>
+    </div>
+  </div>
+</dialog>
 <dialog id="photoDialog" aria-labelledby="modalTitle">
   <div class="modal-head">
     <h2 id="modalTitle">報告照片</h2>
@@ -250,7 +274,7 @@ corners.forEach(p=>{
     b.title=p.name;
     b.setAttribute("aria-label",p.no+"　"+p.name+"（約略位置）");
     b.dataset.name=p.name;
-    b.addEventListener("click",()=>focusPlace(p.name));
+    b.addEventListener("click",()=>openPin(p));
     mapArea.appendChild(b);
   }
 });
@@ -260,6 +284,26 @@ pinList.innerHTML=corners.map(p=>
    : '<li><span class="n off">–</span><span class="unp">'+esc(p.name)+'（圖上未標示）</span></li>'
 ).join("");
 
+function openPin(p){
+  document.getElementById("ppNo").textContent="地圖編號 "+p.no;
+  document.getElementById("ppTag").textContent=p.group==="corner"?"危險角落":"性平事件風險空間";
+  document.getElementById("ppName").textContent=p.name;
+  document.getElementById("ppDesc").textContent=p.desc;
+  document.getElementById("ppHint").textContent="報告第 "+p.page+" 頁｜位置為校園示意圖上的約略位置。";
+  const img=document.getElementById("ppImg");
+  img.src="photos/page-"+p.page+".png";
+  img.alt=p.name+"，報告第 "+p.page+" 頁";
+  document.getElementById("ppList").dataset.name=p.name;
+  const dlg=document.getElementById("pinDialog");
+  if(typeof dlg.showModal==="function"){ dlg.showModal(); } else { dlg.setAttribute("open",""); }
+  document.querySelectorAll(".pin").forEach(b=>b.classList.toggle("on",b.dataset.name===p.name));
+}
+document.getElementById("closePin").addEventListener("click",()=>document.getElementById("pinDialog").close());
+document.getElementById("ppList").addEventListener("click",e=>{
+  const name=e.currentTarget.dataset.name;
+  document.getElementById("pinDialog").close();
+  focusPlace(name);
+});
 function focusPlace(name){
   active="all";
   document.querySelectorAll(".filter").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.filter==="all")));
