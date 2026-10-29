@@ -39,7 +39,6 @@ main{padding:10px 0 70px}
 .intro-box .cap{margin:0 0 12px;color:var(--muted);font-size:.93rem}
 .chips{display:flex;flex-wrap:wrap;gap:7px;list-style:none;padding:0;margin:0}
 .chips li{background:#f7efe9;border:1px solid #efd9c9;border-radius:99px;padding:5px 11px;font-size:.92rem}
-.chips.safety li{background:#eef3e2;border-color:#d9e3c3}
 .map-wrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;margin-top:18px;align-items:start}
 .map{position:relative;width:100%;aspect-ratio:1677/938;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:#f3eee6}
 .map img{display:block;width:100%;height:100%;object-fit:cover}
@@ -80,7 +79,6 @@ main{padding:10px 0 70px}
 .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .list li{background:#f4f7ef;border-radius:10px;padding:8px 11px;font-size:.93rem}
 .list b{color:#6c7d2b;margin-right:5px}
-.checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .check{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
 .check strong{display:block;font-size:1rem}
 .check span{color:var(--muted);font-size:.9rem}
@@ -98,8 +96,7 @@ dialog::backdrop{background:#102b2dbb}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .intro-cols,.map-wrap,.two{grid-template-columns:1fr}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .checks{grid-template-columns:1fr}
-}
+  }
 @media (max-width:560px){
   .wrap{width:calc(100% - 32px)}
   .grid{grid-template-columns:1fr}
@@ -111,13 +108,12 @@ dialog::backdrop{background:#102b2dbb}
 <body>
 <header>
   <div class="wrap top">
-    <div class="brand">臺南特教｜校園安全<small>Campus safety · 112 學年度資料</small></div>
+    <div class="brand">臺南特教｜校園安全<small>Campus danger map · 112 學年度資料</small></div>
     <nav class="nav" aria-label="頁面導覽">
       <a href="#intro">危險地點</a>
       <a href="#map">校園地圖</a>
       <a href="#list">地點清單</a>
-      <a href="#patrol">巡檢點</a>
-      <a href="#checks">安全檢查</a>
+      <a href="intro.html">導覽</a>
     </nav>
   </div>
 </header>
@@ -129,9 +125,6 @@ dialog::backdrop{background:#102b2dbb}
     <p>先認識學校裡被報告列為危險的地方，再看它們在校園裡的大致位置。資料整理自「112 學年校園危險空間改善報告」，可點開每個地點對照原報告照片。</p>
     <div class="stats">
       <div class="stat"><b>15 處</b><span>危險角落</span></div>
-      <div class="stat"><b>8 類</b><span>性平事件風險空間</span></div>
-      <div class="stat"><b>24 點</b><span>校園與建物巡邏點（10＋14）</span></div>
-      <div class="stat"><b>每日 2 次</b><span>原報告記載的巡檢頻率</span></div>
     </div>
   </div>
 </section>
@@ -142,7 +135,7 @@ dialog::backdrop{background:#102b2dbb}
     <div class="section-head">
       <div>
         <h2>先認識危險的地方</h2>
-        <p class="lead">危險分兩類：一是校園裡的危險角落，二是報告列為性平事件風險的空間。</p>
+        <p class="lead">報告列出的危險角落共 15 處，位置如下。</p>
       </div>
     </div>
     <div class="intro-cols">
@@ -151,13 +144,8 @@ dialog::backdrop{background:#102b2dbb}
         <p class="cap">報告列為校園危險角落，需要特別留意與巡視。</p>
         <ul class="chips" id="cornerChips"></ul>
       </div>
-      <div class="intro-box">
-        <h3>性平事件風險空間（8 類）</h3>
-        <p class="cap">報告列為性平事件風險空間。</p>
-        <ul class="chips safety" id="safetyChips"></ul>
-      </div>
     </div>
-    <p class="note">資料基準：113 年 4 月 8 日。巡檢與改善的實際執行情形，請以校內最新紀錄為準。</p>
+    <p class="note">資料基準：113 年 4 月 8 日。改善的實際執行情形，請以校內最新紀錄為準。</p>
   </section>
 
   <section class="section" id="map">
@@ -192,80 +180,15 @@ dialog::backdrop{background:#102b2dbb}
     <div class="filters" role="group" aria-label="類別篩選">
       <button class="filter" data-filter="all" aria-pressed="true">全部地點</button>
       <button class="filter" data-filter="corner" aria-pressed="false">危險角落</button>
-      <button class="filter" data-filter="safety" aria-pressed="false">性平事件風險空間</button>
     </div>
     <div class="grid" id="cards"></div>
     <div class="empty" id="empty">沒有符合條件的地點，換個關鍵字試試。</div>
   </section>
 
-  <section class="section" id="patrol">
-    <div class="section-head">
-      <div>
-        <h2>安全巡檢點</h2>
-        <p>依報告記載，兩組巡檢人員每日各巡檢 2 次。</p>
-      </div>
-    </div>
-    <div class="two">
-      <div class="panel">
-        <h3>校園偏僻區域｜保全巡邏 10 點</h3>
-        <p class="sub">校園及建築物內的巡邏位置</p>
-        <ul class="list">
-          <li><b>①</b>總務處前樓梯口</li>
-          <li><b>②</b>職評室前消防栓</li>
-          <li><b>③</b>蕙質樓電梯</li>
-          <li><b>④</b>餐廳南側機車棚</li>
-          <li><b>⑤</b>餐廳電梯</li>
-          <li><b>⑥</b>洗衣場外樓梯</li>
-          <li><b>⑦</b>宿舍電梯外</li>
-          <li><b>⑧</b>垃圾場內側</li>
-          <li><b>⑨</b>攀岩場外樓梯</li>
-          <li><b>⑩</b>性別友善廁所外牆</li>
-        </ul>
-      </div>
-      <div class="panel">
-        <h3>主要建物內偏僻區域｜技工友巡邏 14 點</h3>
-        <p class="sub">依建物分組列出，便於快速核對</p>
-        <ul class="list">
-          <li><b>行政大樓①</b>模擬工廠 1F 東南側</li>
-          <li><b>行政大樓②</b>實輔處 2F 東南側</li>
-          <li><b>行政大樓③</b>禮堂 3F 東南側</li>
-          <li><b>行政大樓④</b>禮堂 3F 東北側</li>
-          <li><b>行政大樓⑤</b>禮堂 4F 西南側</li>
-          <li><b>行政大樓⑥</b>禮堂 4F 西北側</li>
-          <li><b>教學大樓⑦</b>門市教室 2F 外露台</li>
-          <li><b>教學大樓⑧</b>丁梯 3F 頂樓梯</li>
-          <li><b>教學大樓⑨</b>乙梯 4F 頂樓梯間</li>
-          <li><b>教學大樓⑩</b>丙梯 4F 頂樓梯間</li>
-          <li><b>餐廳⑪</b>1F 南側</li>
-          <li><b>餐廳⑫</b>1F 北側</li>
-          <li><b>餐廳⑬</b>2F 南側</li>
-          <li><b>餐廳⑭</b>2F 北側</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="checks">
-    <div class="section-head">
-      <div>
-        <h2>安全檢查週期</h2>
-        <p>照報告所列的執行頻率整理。</p>
-      </div>
-    </div>
-    <div class="checks">
-      <div class="check"><strong>建物安全檢查</strong><span>全校每 2 年 1 次</span></div>
-      <div class="check"><strong>消防安全檢查</strong><span>每半年 1 次</span></div>
-      <div class="check"><strong>電梯保養</strong><span>每月 1 次</span></div>
-      <div class="check"><strong>電氣設備（配線）</strong><span>每月巡檢 1 次</span></div>
-      <div class="check"><strong>緊急求助鈴</strong><span>每月巡檢 1 次</span></div>
-      <div class="check"><strong>監視器</strong><span>每月巡檢 1 次</span></div>
-    </div>
-  </section>
-
   <div class="source">
     <div>
       <strong>資料來源：112 學年校園危險空間改善報告（113.4.8）</strong>
-      <p>地點名稱、巡檢位置與檢查週期依報告整理；報告第 11～27 頁影像已複製至本站，訪客不需登入即可瀏覽。</p>
+      <p>地點名稱依報告整理；報告第 11～19 頁影像已複製至本站，訪客不需登入即可瀏覽。</p>
     </div>
   </div>
 </main>
@@ -297,23 +220,14 @@ const places=[
 {name:"校門口停車場",group:"corner",page:14,desc:"校門口停車場列入角落檢視。",pin:[93.0,57.6]},
 {name:"停車場樹叢內",group:"corner",page:14,desc:"停車場樹叢區列入角落檢視。",pin:[95.9,65.0]},
 {name:"園藝區",group:"corner",page:15,desc:"園藝區列入校園危險角落。",pin:[71.0,89.0]},
-{name:"垃圾場",group:"corner",page:15,desc:"垃圾場列入校園危險角落；另設有巡邏點。",pin:[64.7,89.0]},
+{name:"垃圾場",group:"corner",page:15,desc:"垃圾場列入校園危險角落。",pin:[64.7,89.0]},
 {name:"國小部教室後面",group:"corner",page:16,desc:"國小部教室後方列入角落檢視。"},
 {name:"桌球教室區域",group:"corner",page:16,desc:"桌球教室周邊列入角落檢視。"},
 {name:"體育器材室",group:"corner",page:17,desc:"體育器材室列入校園危險角落。"},
 {name:"禮堂周圍",group:"corner",page:18,desc:"禮堂周邊列入校園危險角落。"},
 {name:"樓梯間",group:"corner",page:19,desc:"樓梯間列入校園危險角落。"},
-{name:"人少的角落",group:"safety",page:20,desc:"報告列為性平事件風險空間。"},
-{name:"廁所",group:"safety",page:21,desc:"報告列為性平事件風險空間。"},
-{name:"電梯",group:"safety",page:22,desc:"報告列為性平事件風險空間。"},
-{name:"教室",group:"safety",page:23,desc:"報告列為性平事件風險空間。"},
-{name:"宿舍",group:"safety",page:24,desc:"報告列為性平事件風險空間。"},
-{name:"操場",group:"safety",page:25,desc:"報告列為性平事件風險空間。"},
-{name:"穿堂",group:"safety",page:26,desc:"報告列為性平事件風險空間。"},
-{name:"校車",group:"safety",page:27,desc:"報告列為性平事件風險空間。"}
 ];
 const corners=places.filter(p=>p.group==="corner");
-const safeties=places.filter(p=>p.group==="safety");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let active="all";
 let pinNo=0;
@@ -321,7 +235,6 @@ corners.forEach(p=>{ if(p.pin){ p.no=++pinNo; } });
 
 // intro chips
 document.getElementById("cornerChips").innerHTML=corners.map(p=>'<li>'+esc(p.name)+'</li>').join("");
-document.getElementById("safetyChips").innerHTML=safeties.map(p=>'<li>'+esc(p.name)+'</li>').join("");
 
 // map pins + legend
 const mapArea=document.getElementById("mapArea");
@@ -368,7 +281,7 @@ function render(){
   cards.innerHTML=list.map(p=>
     '<article class="card" data-name="'+esc(p.name)+'"><div class="card-top"><h3>'+esc(p.name)+'</h3><span class="index">報告第 '+p.page+' 頁</span></div>'+
     '<p>'+esc(p.desc)+(p.pin?'（地圖編號 '+p.no+'）':'')+'</p>'+
-    '<div class="card-actions"><span class="tag">'+(p.group==="corner"?"危險角落":"性平事件風險空間")+'</span>'+
+    '<div class="card-actions"><span class="tag">'+"危險角落"+'</span>'+
     '<button class="btn" type="button" data-page="'+p.page+'" data-name="'+esc(p.name)+'">查看照片 ↗</button></div></article>'
   ).join("");
   document.getElementById("empty").style.display=list.length?"none":"block";
